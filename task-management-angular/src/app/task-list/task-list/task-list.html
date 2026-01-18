@@ -1,0 +1,121 @@
+<!-- [(ngModel)]: Two-way data binding
+*ngFor: Loop على array
+*ngIf: Conditional rendering
+(click): Event binding
+[class]: Dynamic class binding
+| date: Pipe لتنسيق التاريخ -->
+
+
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-list-task"></i> Task Management</h2>
+    <button class="btn btn-primary" routerLink="/tasks/new">
+      <i class="bi bi-plus-circle"></i> New Task
+    </button>
+  </div>
+
+  <!-- Search & Filter -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input 
+              type="text" 
+              class="form-control" 
+              placeholder="Search by title..."
+              [(ngModel)]="searchTerm"
+              (keyup.enter)="onSearch()">
+            <button class="btn btn-outline-primary" (click)="onSearch()">Search</button>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <select class="form-select" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+            <option [ngValue]="null">All Statuses</option>
+            <option *ngFor="let status of statusOptions" [value]="status.value">
+              {{ status.label }}
+            </option> 
+            
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-secondary w-100" (click)="searchTerm=''; selectedStatus=undefined; onSearch()">
+            <i class="bi bi-x-circle"></i> Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks Table -->
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Due Date</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let task of tasks">
+              <td>
+                <strong>{{ task.title }}</strong>
+                <br>
+                <small class="text-muted">{{ task.description | slice:0:50 }}...</small>
+              </td>
+              <td>{{ task.dueDate | date:'short' }}</td>
+              <td><span [class]="getPriorityClass(task.priority)">{{ task.priority }}</span></td>
+              <td><span [class]="getStatusClass(task.status)">{{ task.status }}</span></td>
+              <td>
+                <button class="btn btn-sm btn-info me-1" (click)="viewTask(task.id)" title="View">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-warning me-1" (click)="editTask(task.id)" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteTask(task.id)" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="tasks.length === 0">
+              <td colspan="5" class="text-center text-muted py-4">
+                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                <p>No tasks found</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <nav *ngIf="totalPages > 1" aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="previousPage()">Previous</button>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="nextPage()">Next</button>
+          </li>
+        </ul>
+        <p class="text-center text-muted mt-2 mb-0">
+          Total Records: {{ totalRecords }}
+        </p>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+
+

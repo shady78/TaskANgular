@@ -1,0 +1,110 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3 text-muted">Loading task details...</p>
+      </div>
+
+      <!-- Task Details -->
+      <div *ngIf="!isLoading && task" class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-file-text"></i> Task Details
+          </h4>
+          <button class="btn btn-sm btn-light" (click)="goBack()">
+            <i class="bi bi-arrow-left"></i> Back
+          </button>
+        </div>
+
+        <div class="card-body">
+          <!-- Title -->
+          <div class="mb-4">
+            <h3 class="mb-0">{{ task.title }}</h3>
+          </div>
+
+          <!-- Status & Priority -->
+          <div class="mb-4">
+            <div class="row">
+              <div class="col-md-6">
+                <label class="text-muted d-block mb-2">
+                  <i class="bi bi-flag"></i> Priority
+                </label>
+                <span [class]="getPriorityClass(task.priority)" style="font-size: 1rem;">
+                  {{ task.priority }}
+                </span>
+              </div>
+              <div class="col-md-6">
+                <label class="text-muted d-block mb-2">
+                  <i class="bi bi-circle-fill"></i> Status
+                </label>
+                <span [class]="getStatusClass(task.status)" style="font-size: 1rem;">
+                  {{ task.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-4">
+            <label class="text-muted d-block mb-2">
+              <i class="bi bi-card-text"></i> Description
+            </label>
+            <p class="lead">{{ task.description || 'No description provided' }}</p>
+          </div>
+
+          <!-- Due Date -->
+          <div class="mb-4">
+            <label class="text-muted d-block mb-2">
+              <i class="bi bi-calendar-event"></i> Due Date
+            </label>
+            <p class="mb-0">
+              <strong>{{ task.dueDate | date:'fullDate' }}</strong>
+              <small class="text-muted ms-2">({{ task.dueDate | date:'short' }})</small>
+            </p>
+          </div>
+
+          <!-- Metadata -->
+          <div class="mb-4">
+            <div class="row">
+              <div class="col-md-6">
+                <label class="text-muted d-block mb-2">
+                  <i class="bi bi-clock-history"></i> Created At
+                </label>
+                <p class="mb-0">{{ task.createdAt | date:'medium' }}</p>
+              </div>
+              <div class="col-md-6" *ngIf="task.updatedAt">
+                <label class="text-muted d-block mb-2">
+                  <i class="bi bi-pencil-square"></i> Last Updated
+                </label>
+                <p class="mb-0">{{ task.updatedAt | date:'medium' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex gap-2 border-top pt-4">
+            <button class="btn btn-warning" (click)="editTask()">
+              <i class="bi bi-pencil"></i> Edit Task
+            </button>
+            <button class="btn btn-danger" (click)="deleteTask()">
+              <i class="bi bi-trash"></i> Delete Task
+            </button>
+            <button class="btn btn-outline-secondary ms-auto" (click)="goBack()">
+              <i class="bi bi-arrow-left"></i> Back to List
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="!isLoading && !task" class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>Task not found!</strong> The task you're looking for doesn't exist.
+      </div>
+    </div>
+  </div>
+</div>

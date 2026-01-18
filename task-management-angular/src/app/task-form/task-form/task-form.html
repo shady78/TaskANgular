@@ -1,0 +1,95 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="bi" [class.bi-plus-circle]="!isEditMode" [class.bi-pencil]="isEditMode"></i>
+            {{ isEditMode ? 'Edit Task' : 'Create New Task' }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+            <!-- Title -->
+            <div class="mb-3">
+              <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="title"
+                formControlName="title"
+                [class.is-invalid]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
+              <div class="invalid-feedback">
+                <span *ngIf="taskForm.get('title')?.errors?.['required']">Title is required</span>
+                <span *ngIf="taskForm.get('title')?.errors?.['maxlength']">Maximum 200 characters</span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea 
+                class="form-control" 
+                id="description"
+                rows="3"
+                formControlName="description"
+                [class.is-invalid]="taskForm.get('description')?.invalid && taskForm.get('description')?.touched"></textarea>
+              <div class="invalid-feedback">
+                Maximum 1000 characters
+              </div>
+            </div>
+
+            <!-- Due Date -->
+            <div class="mb-3">
+              <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
+              <input 
+                type="date" 
+                class="form-control" 
+                id="dueDate"
+                formControlName="dueDate"
+                [class.is-invalid]="taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched">
+              <div class="invalid-feedback">
+                Due date is required
+              </div>
+            </div>
+
+            <!-- Priority -->
+            <div class="mb-3">
+            <label for="priority" class="form-label">Priority <span class="text-danger">*</span></label>
+            <select 
+                class="form-select" 
+                id="priority"
+                formControlName="priority">
+                <option [ngValue]="priority.value" *ngFor="let priority of priorities">
+                {{ priority.label }}
+                </option>
+            </select>
+            </div>
+
+          <!-- Status (Only in Edit Mode) -->
+        <div class="mb-3" *ngIf="isEditMode">
+        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+        <select 
+            class="form-select" 
+            id="status"
+            formControlName="status">
+            <option [ngValue]="status.value" *ngFor="let status of statuses">
+            {{ status.label }}
+            </option>
+        </select>
+        </div>
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                <i class="bi bi-x-circle"></i> Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">
+                <i class="bi bi-check-circle"></i> {{ isEditMode ? 'Update' : 'Create' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
