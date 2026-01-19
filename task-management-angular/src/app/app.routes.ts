@@ -11,11 +11,3 @@ export const routes: Routes = [
   { path: 'tasks/edit/:id', component: TaskForm },
   { path: '**', redirectTo: '/tasks' }
 ];
-
-
-// شرح الـ Routes:
-
-// path: '': المسار الافتراضي
-// redirectTo: إعادة التوجيه
-// pathMatch: 'full': مطابقة كاملة
-// :id: Parameter ديناميكي

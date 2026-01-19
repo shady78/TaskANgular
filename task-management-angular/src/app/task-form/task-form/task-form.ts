@@ -50,7 +50,6 @@ export class TaskForm implements OnInit {
     });
   }
 
-  // تهيئة الـ Form
   initForm(): void {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(200)]],
@@ -61,7 +60,6 @@ export class TaskForm implements OnInit {
     });
   }
 
-  // تحميل بيانات المهمة في حالة التعديل
   loadTask(): void {
     if (this.taskId) {
       this.taskService.getTaskById(this.taskId).subscribe({
@@ -83,14 +81,12 @@ export class TaskForm implements OnInit {
     }
   }
 
-  // حفظ المهمة
   onSubmit(): void {
     if (this.taskForm.valid) {
       const formValue = this.taskForm.value;
 
     
       if (this.isEditMode && this.taskId) {
-        // تحديث
         this.taskService.updateTask(this.taskId, formValue).subscribe({
           next: () => {
             alert('Task updated successfully');
@@ -102,7 +98,6 @@ export class TaskForm implements OnInit {
           }
         });
       } else {
-        // إنشاء جديد
         this.taskService.createTask(formValue).subscribe({
           next: () => {
             alert('Task created successfully');
@@ -117,12 +112,10 @@ export class TaskForm implements OnInit {
     }
   }
 
-  // إلغاء والعودة
   onCancel(): void {
     this.router.navigate(['/tasks']);
   }
 
-  // Helper methods
   getPriorityValue(priority: string): number {
     switch (priority.toLowerCase()) {
       case 'low': return TaskPriority.Low;
@@ -143,11 +136,3 @@ export class TaskForm implements OnInit {
 
   }
 }
-
-
-// شرح الـ Form:
-
-// FormBuilder: لإنشاء Reactive Forms
-// Validators: للتحقق من صحة البيانات
-// patchValue: لملء الـ Form بالبيانات
-// ReactiveFormsModule: مطلوب للـ Reactive Forms

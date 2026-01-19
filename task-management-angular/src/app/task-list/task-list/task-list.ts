@@ -21,7 +21,6 @@ export class TaskList  implements OnInit{
   totalRecords = 0;
   searchTerm = '';
   selectedStatus: number | undefined;
-  // خيارات الـ Status للفلترة
   statusOptions = [
     { value: 1, label: 'New' },
     { value: 2, label: 'In Progress' },
@@ -38,7 +37,6 @@ export class TaskList  implements OnInit{
     this.loadTasks();
   }
 
-    // تحميل المهام
   loadTasks(): void {
     this.taskService.getTasks(this.currentPage, this.pageSize, this.selectedStatus, this.searchTerm)
       .subscribe({
@@ -55,19 +53,16 @@ export class TaskList  implements OnInit{
       });
   }
 
-  // البحث
   onSearch(): void {
     this.currentPage = 1;
     this.loadTasks();
   }
 
-  // تغيير الفلتر
   onFilterChange(): void {
     this.currentPage = 1;
     this.loadTasks();
   }
 
-  // الذهاب للصفحة السابقة
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -75,7 +70,6 @@ export class TaskList  implements OnInit{
     }
   }
 
-  // الذهاب للصفحة التالية
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -83,17 +77,14 @@ export class TaskList  implements OnInit{
     }
   }
 
-  // عرض تفاصيل المهمة
   viewTask(id: number): void {
     this.router.navigate(['/tasks', id]);
   }
 
-  // تعديل المهمة
   editTask(id: number): void {
     this.router.navigate(['/tasks/edit', id]);
   }
 
-  // حذف المهمة
   deleteTask(id: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
       this.taskService.deleteTask(id).subscribe({
@@ -109,7 +100,6 @@ export class TaskList  implements OnInit{
     }
   }
 
-  // الحصول على class حسب الأولوية
   getPriorityClass(priority: string): string {
     switch (priority.toLowerCase()) {
       case 'high': return 'badge bg-danger';
@@ -119,7 +109,6 @@ export class TaskList  implements OnInit{
     }
   }
 
-  // الحصول على class حسب الحالة
   getStatusClass(status: string): string {
     switch (status.toLowerCase()) {
       case 'new': return 'badge bg-primary';
@@ -130,4 +119,3 @@ export class TaskList  implements OnInit{
     }
   }
 }
-// subscribe: للاستماع للـ Observable
