@@ -16,6 +16,7 @@ export class TaskForm implements OnInit {
   taskForm!: FormGroup;
   isEditMode = false;
   taskId?: number;
+  isLoading = true;
 
   priorities = [
     { value: TaskPriority.Low, label: 'Low' },
@@ -60,20 +61,26 @@ export class TaskForm implements OnInit {
     });
   }
 
-  loadTask(): void {
+loadTask(): void {
     if (this.taskId) {
+      this.isLoading = true;
       this.taskService.getTaskById(this.taskId).subscribe({
         next: (task) => {
+          console.log('Task loaded:', task);
+          
           this.taskForm.patchValue({
-            title: task.title,
-            description: task.description,
-            dueDate: task.dueDate.split('T')[0],
-            priority: this.getPriorityValue(task.priority),
-            status: this.getStatusValue(task.status)
+            title: task.title || '',
+            description: task.description || '',
+            dueDate: task.dueDate?.split('T')[0] || '', // ✅ Optional chaining
+            priority: task.priority ? this.getPriorityValue(task.priority) : TaskPriority.Medium,
+            status: task.status ? this.getStatusValue(task.status) : TaskStatus.New
           });
+          
+          this.isLoading = false;
         },
         error: (error) => {
           console.error('Error loading task:', error);
+          this.isLoading = false;
           alert('Failed to load task');
           this.router.navigate(['/tasks']);
         }
